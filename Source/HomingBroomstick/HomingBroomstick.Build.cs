@@ -20,7 +20,7 @@ public class HomingBroomstick : ModuleRules
 			"UMG"
 		});
 
-		PrivateDependencyModuleNames.AddRange(new string[] { });
+		PrivateDependencyModuleNames.AddRange(new string[] { "HomingMissilesPlugin", "HomingMissilesPlugin" });
 
 		PublicIncludePaths.AddRange(new string[] {
 			"HomingBroomstick",

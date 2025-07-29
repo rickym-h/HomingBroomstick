@@ -7,7 +7,10 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "EnhancedInputComponent.h"
 #include "InputActionValue.h"
+#include "Core/ProjectileManagerSubsystem.h"
+#include "Core/ProjectileManagerSubsystem.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Projectiles/HomingProjectile.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -115,6 +118,15 @@ void AHomingBroomstickCharacter::DoJumpStart()
 {
 	// pass Jump to the character
 	Jump();
+
+	if (UWorld* World = GetWorld())
+	{
+		UProjectileManagerSubsystem* ProjectileManager = World->GetSubsystem<UProjectileManagerSubsystem>();
+		if (ProjectileManager)
+		{
+			ProjectileManager->SpawnProjectile(FTransform(), 0.f, AHomingProjectile::StaticClass());
+		}
+	}
 }
 
 void AHomingBroomstickCharacter::DoJumpEnd()

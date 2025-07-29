@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "HomingProjectile.generated.h"
 
+class UCapsuleComponent;
+
 UCLASS()
 class HOMINGMISSILESPLUGIN_API AHomingProjectile : public AActor
 {
@@ -15,11 +17,29 @@ public:
 	// Sets default values for this actor's properties
 	AHomingProjectile();
 
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
+
+	void InitHomingProjectile(const float InProjectileSpeed, const TWeakObjectPtr<AActor> InTargetActor);
+
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
+	TObjectPtr<UCapsuleComponent> CollisionComponent;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
+	TObjectPtr<UStaticMeshComponent> ProjectileMesh;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Homing Missile")
+	TWeakObjectPtr<AActor> TargetActor;
+	UPROPERTY(EditAnywhere, Category = "Homing Missile")
+	float Speed;
+	UPROPERTY(EditAnywhere, Category = "Homing Missile")
+	float Damage;
+	UPROPERTY(EditAnywhere, Category = "Homing Missile")
+	float DamageRadius;
+	// UPROPERTY(EditAnywhere, Category = "Homing Missile")
+	// float MaxLifeSpan;
 };

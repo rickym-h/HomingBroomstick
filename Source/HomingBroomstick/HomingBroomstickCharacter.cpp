@@ -121,10 +121,13 @@ void AHomingBroomstickCharacter::DoJumpStart()
 
 	if (UWorld* World = GetWorld())
 	{
-		UProjectileManagerSubsystem* ProjectileManager = World->GetSubsystem<UProjectileManagerSubsystem>();
-		if (ProjectileManager)
+		if (const UProjectileManagerSubsystem* ProjectileManager = World->GetSubsystem<UProjectileManagerSubsystem>())
 		{
-			ProjectileManager->SpawnProjectile(FTransform(), 0.f, AHomingProjectile::StaticClass());
+			ProjectileManager->SpawnProjectile(
+				FTransform(GetActorRotation(), GetActorLocation(), FVector(1)),
+				100.f,
+				BroomstickMissileClass,
+				this);
 		}
 	}
 }

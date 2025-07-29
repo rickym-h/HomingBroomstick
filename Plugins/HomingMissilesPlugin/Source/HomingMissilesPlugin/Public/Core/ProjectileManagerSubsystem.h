@@ -19,5 +19,6 @@ public:
 	AHomingProjectile* SpawnProjectile(
 		const FTransform& ProjectileTransform,
 		const float ProjectileSpeed,
-		const TSubclassOf<AHomingProjectile>& ProjectileClass) const;
+		const TSubclassOf<AHomingProjectile>& ProjectileClass,
+		TWeakObjectPtr<AActor> TargetActor) const;
 };

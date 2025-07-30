@@ -40,7 +40,7 @@ void AHomingProjectile::OnHitTarget(AActor* SelfActor, AActor* OtherActor, FVect
 		UNiagaraComponent* NiagaraComp = UNiagaraFunctionLibrary::SpawnSystemAtLocation(
 			GetWorld(),
 			OnHitParticleSystem,
-			GetActorLocation(),
+			Hit.ImpactPoint,
 			FRotator::ZeroRotator,
 			FVector(1),
 			true,

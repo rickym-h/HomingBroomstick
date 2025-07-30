@@ -42,9 +42,15 @@ void AProjectileLauncher::LaunchProjectile(AActor* Target)
 		return;
 	}
 
+	if (!Target)
+	{
+		UE_LOG(LogTemp, Error, TEXT("AProjectileLauncher::LaunchProjectile - Target is null"));
+		return;
+	}
+
 	ProjectileManager->SpawnProjectile(
 		FTransform(FRotator::ZeroRotator, ProjectileLaunchPoint->GetComponentLocation(), FVector(1)),
-		200.f,
+		800.f,
 		ProjectileClass,
 		Target
 		);

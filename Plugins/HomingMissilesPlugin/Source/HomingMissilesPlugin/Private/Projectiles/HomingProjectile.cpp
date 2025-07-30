@@ -3,6 +3,8 @@
 
 #include "Projectiles/HomingProjectile.h"
 
+#include "NiagaraComponent.h"
+#include "NiagaraFunctionLibrary.h"
 #include "Components/CapsuleComponent.h"
 
 
@@ -26,7 +28,28 @@ AHomingProjectile::AHomingProjectile()
 void AHomingProjectile::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	OnActorHit.AddUniqueDynamic(this, &AHomingProjectile::OnHitTarget);
+}
+
+void AHomingProjectile::OnHitTarget(AActor* SelfActor, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Hit Target: %p"), *OtherActor->GetActorNameOrLabel());
+	if (OnHitParticleSystem)
+	{
+		UNiagaraComponent* NiagaraComp = UNiagaraFunctionLibrary::SpawnSystemAtLocation(
+			GetWorld(),
+			OnHitParticleSystem,
+			GetActorLocation(),
+			FRotator::ZeroRotator,
+			FVector(1),
+			true,
+			true,
+			ENCPoolMethod::None,
+			false
+			);
+	}
+	Destroy();
 }
 
 // Called every frame
@@ -44,7 +67,10 @@ void AHomingProjectile::Tick(float DeltaTime)
 
 		// Move towards the target
 		// Since we are already facing the target, only have to add a local offset instead of a world offset
-		AddActorLocalOffset(FVector(0, 0, Speed * DeltaTime));
+		AddActorLocalOffset(
+			FVector(0, 0, Speed * DeltaTime),
+			true
+			);
 	}
 }
 
@@ -53,4 +79,3 @@ void AHomingProjectile::InitHomingProjectile(const float InProjectileSpeed, cons
 	Speed = InProjectileSpeed;
 	TargetActor = InTargetActor;
 }
-

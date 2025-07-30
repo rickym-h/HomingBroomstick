@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "HomingProjectile.generated.h"
 
+class UNiagaraSystem;
 class UCapsuleComponent;
 
 UCLASS()
@@ -42,4 +43,9 @@ protected:
 	float DamageRadius;
 	// UPROPERTY(EditAnywhere, Category = "Homing Missile")
 	// float MaxLifeSpan;
+
+	UFUNCTION()
+	void OnHitTarget(AActor* SelfActor, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit );
+	UPROPERTY(EditAnywhere, Category = "Homing Missile")
+	TObjectPtr<UNiagaraSystem> OnHitParticleSystem;
 };

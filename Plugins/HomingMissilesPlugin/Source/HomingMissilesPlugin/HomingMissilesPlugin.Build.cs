@@ -37,7 +37,7 @@ public class HomingMissilesPlugin : ModuleRules
 				"CoreUObject",
 				"Engine",
 				"Slate",
-				"SlateCore",
+				"SlateCore", "Niagara",
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);

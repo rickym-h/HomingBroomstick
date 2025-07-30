@@ -27,8 +27,13 @@ void AFlyingBat::BeginPlay()
 {
 	Super::BeginPlay();
 
-	TargetLocation = GetRandomLocationInRadius(4000.0f);
-	
+	TargetLocation = GetRandomLocationInRadius(2000.0f);
+}
+
+float AFlyingBat::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	Destroy();
+	return DamageAmount;
 }
 
 FVector AFlyingBat::GetRandomLocationInRadius(const float Radius) const
@@ -47,9 +52,8 @@ void AFlyingBat::Tick(float DeltaTime)
 
 	if (FVector::Dist(GetActorLocation(), TargetLocation) < 10.0f)
 	{
-		TargetLocation = GetRandomLocationInRadius(2000.0f);
+		TargetLocation = GetRandomLocationInRadius(1000.0f);
 	}
-	UE_LOG(LogTemp, Warning, TEXT("%f"), FVector::Dist(GetActorLocation(), TargetLocation));
 
 	// Move towards the target location - this is somewhat similar to the homing missile movement implementation
 	// Rotate towards the target

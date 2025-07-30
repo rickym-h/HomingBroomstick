@@ -50,7 +50,7 @@ void AProjectileLauncher::LaunchProjectile(AActor* Target)
 
 	ProjectileManager->SpawnProjectile(
 		FTransform(FRotator::ZeroRotator, ProjectileLaunchPoint->GetComponentLocation(), FVector(1)),
-		800.f,
+		1200.f,
 		ProjectileClass,
 		Target
 		);

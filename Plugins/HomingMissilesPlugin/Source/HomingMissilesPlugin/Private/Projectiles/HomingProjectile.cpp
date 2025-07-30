@@ -6,6 +6,7 @@
 #include "NiagaraComponent.h"
 #include "NiagaraFunctionLibrary.h"
 #include "Components/CapsuleComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 
 // Sets default values
@@ -49,6 +50,20 @@ void AHomingProjectile::OnHitTarget(AActor* SelfActor, AActor* OtherActor, FVect
 			false
 			);
 	}
+	
+	UGameplayStatics::ApplyRadialDamage(
+		GetWorld(),
+		1,
+		Hit.ImpactPoint,
+		500.f,
+		UDamageType::StaticClass(),
+		TArray<AActor*>(),
+		this,
+		UGameplayStatics::GetPlayerController(GetWorld(), 0),
+		true
+		);
+	DrawDebugSphere(GetWorld(), Hit.ImpactPoint, 500.f, 10, FColor::Red, true, 10.f);
+	
 	Destroy();
 }
 

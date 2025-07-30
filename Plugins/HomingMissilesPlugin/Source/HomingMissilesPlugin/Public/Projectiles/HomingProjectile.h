@@ -18,6 +18,8 @@ public:
 	// Sets default values for this actor's properties
 	AHomingProjectile();
 
+	void TriggerDestruction();
+	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -41,8 +43,8 @@ protected:
 	float Damage;
 	UPROPERTY(EditAnywhere, Category = "Homing Missile")
 	float DamageRadius;
-	// UPROPERTY(EditAnywhere, Category = "Homing Missile")
-	// float MaxLifeSpan;
+
+	bool bIsGliding = false;
 
 	UFUNCTION()
 	void OnHitTarget(AActor* SelfActor, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit );

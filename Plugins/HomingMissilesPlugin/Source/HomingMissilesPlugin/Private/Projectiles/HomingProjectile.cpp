@@ -25,23 +25,14 @@ AHomingProjectile::AHomingProjectile()
 	ProjectileMesh->SetCollisionResponseToAllChannels(ECR_Ignore);
 }
 
-// Called when the game starts or when spawned
-void AHomingProjectile::BeginPlay()
+void AHomingProjectile::TriggerDestruction()
 {
-	Super::BeginPlay();
-
-	OnActorHit.AddUniqueDynamic(this, &AHomingProjectile::OnHitTarget);
-}
-
-void AHomingProjectile::OnHitTarget(AActor* SelfActor, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit)
-{
-	UE_LOG(LogTemp, Warning, TEXT("Hit Target: %p"), *OtherActor->GetActorNameOrLabel());
 	if (OnHitParticleSystem)
 	{
 		UNiagaraComponent* NiagaraComp = UNiagaraFunctionLibrary::SpawnSystemAtLocation(
 			GetWorld(),
 			OnHitParticleSystem,
-			Hit.ImpactPoint,
+			GetActorLocation(),
 			FRotator::ZeroRotator,
 			FVector(1),
 			true,
@@ -54,17 +45,31 @@ void AHomingProjectile::OnHitTarget(AActor* SelfActor, AActor* OtherActor, FVect
 	UGameplayStatics::ApplyRadialDamage(
 		GetWorld(),
 		1,
-		Hit.ImpactPoint,
-		500.f,
+		GetActorLocation(),
+		600.f,
 		UDamageType::StaticClass(),
 		TArray<AActor*>(),
 		this,
 		UGameplayStatics::GetPlayerController(GetWorld(), 0),
 		true
 		);
-	DrawDebugSphere(GetWorld(), Hit.ImpactPoint, 500.f, 10, FColor::Red, true, 10.f);
-	
+
 	Destroy();
+}
+
+// Called when the game starts or when spawned
+void AHomingProjectile::BeginPlay()
+{
+	Super::BeginPlay();
+
+	OnActorHit.AddUniqueDynamic(this, &AHomingProjectile::OnHitTarget);
+}
+
+void AHomingProjectile::OnHitTarget(AActor* SelfActor, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Hit Target: %p"), *OtherActor->GetActorNameOrLabel());
+	
+	TriggerDestruction();
 }
 
 // Called every frame
@@ -80,13 +85,28 @@ void AHomingProjectile::Tick(float DeltaTime)
 		const FRotator TargetRotation = Direction.Rotation() + FRotator(-90, 0, 0);
 		SetActorRotation(TargetRotation);
 
-		// Move towards the target
-		// Since we are already facing the target, only have to add a local offset instead of a world offset
-		AddActorLocalOffset(
-			FVector(0, 0, Speed * DeltaTime),
-			true
-			);
+	} else if (!bIsGliding)
+	{
+		// Target is invalid, possibly another broomstick has destroyed it - begin gliding until destruction
+		bIsGliding = true;
+
+		FTimerHandle DestructionTimerHandle;
+		
+		GetWorld()->GetTimerManager().SetTimer(
+			DestructionTimerHandle,
+			this,
+			&AHomingProjectile::TriggerDestruction,
+			2.f,
+			false);
 	}
+	
+	// Move towards the target
+	// Since we are already facing the target, only have to add a local offset instead of a world offset
+	AddActorLocalOffset(
+		FVector(0, 0, Speed * DeltaTime),
+		true
+		);
+	
 }
 
 void AHomingProjectile::InitHomingProjectile(const float InProjectileSpeed, const TWeakObjectPtr<AActor> InTargetActor)

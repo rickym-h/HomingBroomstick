@@ -37,6 +37,10 @@ protected:
 	/** Jump Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category ="Input")
 	UInputAction* JumpAction;
+	
+	/** Interact Input Action */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category ="Input")
+	UInputAction* InteractAction;
 
 	/** Move Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category ="Input")
@@ -61,6 +65,9 @@ protected:
 	/** Called from Input Actions for looking input */
 	void LookInput(const FInputActionValue& Value);
 
+	/** Called from Input Actions for looking input */
+	void InteractInput(const FInputActionValue& Value);
+
 	/** Handles aim inputs from either controls or UI interfaces */
 	UFUNCTION(BlueprintCallable, Category="Input")
 	virtual void DoAim(float Yaw, float Pitch);
@@ -76,6 +83,9 @@ protected:
 	/** Handles jump end inputs from either controls or UI interfaces */
 	UFUNCTION(BlueprintCallable, Category="Input")
 	virtual void DoJumpEnd();
+	
+	UFUNCTION(BlueprintCallable, Category="Input")
+	void Interact();
 
 protected:
 

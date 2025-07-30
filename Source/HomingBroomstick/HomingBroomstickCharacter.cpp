@@ -10,6 +10,7 @@
 #include "Core/ProjectileManagerSubsystem.h"
 #include "Core/ProjectileManagerSubsystem.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Interfaces/InteractableInterface.h"
 #include "Projectiles/HomingProjectile.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
@@ -66,6 +67,9 @@ void AHomingBroomstickCharacter::SetupPlayerInputComponent(UInputComponent* Play
 		// Looking/Aiming
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AHomingBroomstickCharacter::LookInput);
 		EnhancedInputComponent->BindAction(MouseLookAction, ETriggerEvent::Triggered, this, &AHomingBroomstickCharacter::LookInput);
+
+		// Interaction
+		EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Triggered, this, &AHomingBroomstickCharacter::InteractInput);
 	}
 	else
 	{
@@ -94,6 +98,11 @@ void AHomingBroomstickCharacter::LookInput(const FInputActionValue& Value)
 
 }
 
+void AHomingBroomstickCharacter::InteractInput(const FInputActionValue& Value)
+{
+	Interact();
+}
+
 void AHomingBroomstickCharacter::DoAim(float Yaw, float Pitch)
 {
 	if (GetController())
@@ -118,22 +127,30 @@ void AHomingBroomstickCharacter::DoJumpStart()
 {
 	// pass Jump to the character
 	Jump();
-
-	if (UWorld* World = GetWorld())
-	{
-		if (const UProjectileManagerSubsystem* ProjectileManager = World->GetSubsystem<UProjectileManagerSubsystem>())
-		{
-			ProjectileManager->SpawnProjectile(
-				FTransform(GetActorRotation(), GetActorLocation(), FVector(1)),
-				100.f,
-				BroomstickMissileClass,
-				this);
-		}
-	}
 }
 
 void AHomingBroomstickCharacter::DoJumpEnd()
 {
 	// pass StopJumping to the character
 	StopJumping();
+}
+
+void AHomingBroomstickCharacter::Interact()
+{
+	UE_LOG(LogTemp, Warning, TEXT("AHomingBroomstickCharacter::Interact()"));
+	FVector Start = GetFirstPersonCameraComponent()->GetComponentLocation();
+	FVector End = Start + GetFirstPersonCameraComponent()->GetForwardVector() * 500.0f;
+
+	FHitResult Hit;
+	FCollisionQueryParams Params;
+	Params.AddIgnoredActor(this);
+
+	if (GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_Visibility, Params))
+	{
+		AActor* HitActor = Hit.GetActor();
+		if (HitActor && HitActor->Implements<UInteractableInterface>())
+		{
+			IInteractableInterface::Execute_Interact(HitActor, this);
+		}
+	}
 }

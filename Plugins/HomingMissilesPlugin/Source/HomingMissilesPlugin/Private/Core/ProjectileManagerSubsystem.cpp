@@ -6,7 +6,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Projectiles/HomingProjectile.h"
 
-AHomingProjectile* UProjectileManagerSubsystem::SpawnProjectile(const FTransform& ProjectileTransform, const float ProjectileSpeed, const TSubclassOf<AHomingProjectile>& ProjectileClass, TWeakObjectPtr<AActor> TargetActor) const
+AHomingProjectile* UProjectileManagerSubsystem::SpawnProjectile(const FTransform& ProjectileTransform, const float ProjectileSpeed, const TSubclassOf<AHomingProjectile>& ProjectileClass, const TWeakObjectPtr<AActor> TargetActor) const
 {
 	if (!ProjectileClass) UE_LOG(LogTemp, Error, TEXT("UProjectileManagerSubsystem::SpawnProjectile - ProjectileClass is null"));
 	

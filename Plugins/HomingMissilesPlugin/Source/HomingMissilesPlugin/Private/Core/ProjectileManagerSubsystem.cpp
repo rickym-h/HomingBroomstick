@@ -14,7 +14,8 @@ AHomingProjectile* UProjectileManagerSubsystem::SpawnHomingProjectile(const FTra
 		UE_LOG(LogTemp, Error, TEXT("UProjectileManagerSubsystem::SpawnHomingProjectile - ProjectileClass is null"));
 		return nullptr;
 	}
-	
+
+	// Spawn actor deferred because we need to set properties before allowing its BeginPlay() to be called.
 	AHomingProjectile* Projectile = GetWorld()->SpawnActorDeferred<AHomingProjectile>(ProjectileClass, ProjectileTransform);
 
 	const TWeakObjectPtr ActorPointer = TargetActor;
@@ -23,7 +24,8 @@ AHomingProjectile* UProjectileManagerSubsystem::SpawnHomingProjectile(const FTra
 		UE_LOG(LogTemp, Error, TEXT("UProjectileManagerSubsystem::SpawnHomingProjectile - TargetActor is invalid"));
 		return nullptr;
 	}
-	
+
+	// Set the projectile's properties before finishing spawning
 	Projectile->InitHomingProjectile(ProjectileSpeed, ActorPointer, OnHitSound);
 	UGameplayStatics::FinishSpawningActor(Projectile, ProjectileTransform);
 

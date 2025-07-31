@@ -16,9 +16,11 @@ class HOMINGMISSILESPLUGIN_API UProjectileManagerSubsystem : public UWorldSubsys
 	GENERATED_BODY()
 
 public:
-	AHomingProjectile* SpawnProjectile(
+
+	UFUNCTION(BlueprintCallable, Category="HomingMissilesPlugin")
+	AHomingProjectile* SpawnHomingProjectile(
 		const FTransform& ProjectileTransform,
 		const float ProjectileSpeed,
 		const TSubclassOf<AHomingProjectile>& ProjectileClass,
-		TWeakObjectPtr<AActor> TargetActor) const;
+		AActor* TargetActor) const;
 };

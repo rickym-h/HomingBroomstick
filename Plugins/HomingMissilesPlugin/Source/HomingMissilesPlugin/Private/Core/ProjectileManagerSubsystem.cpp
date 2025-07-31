@@ -6,12 +6,24 @@
 #include "Kismet/GameplayStatics.h"
 #include "Projectiles/HomingProjectile.h"
 
-AHomingProjectile* UProjectileManagerSubsystem::SpawnProjectile(const FTransform& ProjectileTransform, const float ProjectileSpeed, const TSubclassOf<AHomingProjectile>& ProjectileClass, const TWeakObjectPtr<AActor> TargetActor) const
+AHomingProjectile* UProjectileManagerSubsystem::SpawnHomingProjectile(const FTransform& ProjectileTransform, const float ProjectileSpeed, const TSubclassOf<AHomingProjectile>& ProjectileClass, AActor* TargetActor) const
 {
-	if (!ProjectileClass) UE_LOG(LogTemp, Error, TEXT("UProjectileManagerSubsystem::SpawnProjectile - ProjectileClass is null"));
+	if (!ProjectileClass)
+	{
+		UE_LOG(LogTemp, Error, TEXT("UProjectileManagerSubsystem::SpawnHomingProjectile - ProjectileClass is null"));
+		return nullptr;
+	}
 	
 	AHomingProjectile* Projectile = GetWorld()->SpawnActorDeferred<AHomingProjectile>(ProjectileClass, ProjectileTransform);
-	Projectile->InitHomingProjectile(ProjectileSpeed, TargetActor);
+
+	const TWeakObjectPtr<AActor> ActorPointer = TargetActor;
+	if (!ActorPointer.IsValid())
+	{
+		UE_LOG(LogTemp, Error, TEXT("UProjectileManagerSubsystem::SpawnHomingProjectile - TargetActor is invalid"));
+		return nullptr;
+	}
+	
+	Projectile->InitHomingProjectile(ProjectileSpeed, ActorPointer);
 	UGameplayStatics::FinishSpawningActor(Projectile, ProjectileTransform);
 
 	return Projectile;

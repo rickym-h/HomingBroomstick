@@ -31,6 +31,7 @@ protected:
 	FVector TargetLocation;
 	float Speed = 1000.f;
 	FVector GetRandomLocationInRadius(const float Radius) const;
+	static FVector GetRandomLocationInBoundingBox(const FVector& BoxCentre, float BoxRadius);
 
 public:
 	// Called every frame

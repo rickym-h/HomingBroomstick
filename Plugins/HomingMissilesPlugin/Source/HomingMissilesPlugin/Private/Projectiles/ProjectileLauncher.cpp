@@ -48,7 +48,7 @@ void AProjectileLauncher::LaunchProjectile(AActor* Target)
 		return;
 	}
 
-	ProjectileManager->SpawnProjectile(
+	ProjectileManager->SpawnHomingProjectile(
 		FTransform(FRotator::ZeroRotator, ProjectileLaunchPoint->GetComponentLocation(), FVector(1)),
 		1200.f,
 		ProjectileClass,

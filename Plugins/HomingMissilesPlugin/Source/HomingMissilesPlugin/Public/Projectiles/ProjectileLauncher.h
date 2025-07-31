@@ -33,4 +33,8 @@ protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<AHomingProjectile> ProjectileClass;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	USoundWave* LaunchSoundEffect;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	USoundWave* OnHitSoundEffect;
 };

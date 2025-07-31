@@ -54,6 +54,11 @@ void AHomingProjectile::TriggerDestruction()
 		true
 		);
 
+	if (OnHitSound)
+	{
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), OnHitSound, GetActorLocation());
+	}
+
 	Destroy();
 }
 
@@ -109,8 +114,9 @@ void AHomingProjectile::Tick(float DeltaTime)
 	
 }
 
-void AHomingProjectile::InitHomingProjectile(const float InProjectileSpeed, const TWeakObjectPtr<AActor> InTargetActor)
+void AHomingProjectile::InitHomingProjectile(const float InProjectileSpeed, const TWeakObjectPtr<AActor> InTargetActor, USoundWave* InOnHitSound)
 {
 	Speed = InProjectileSpeed;
 	TargetActor = InTargetActor;
+	OnHitSound = InOnHitSound;
 }

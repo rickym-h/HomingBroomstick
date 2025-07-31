@@ -6,7 +6,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "Projectiles/HomingProjectile.h"
 
-AHomingProjectile* UProjectileManagerSubsystem::SpawnHomingProjectile(const FTransform& ProjectileTransform, const float ProjectileSpeed, const TSubclassOf<AHomingProjectile>& ProjectileClass, AActor* TargetActor) const
+AHomingProjectile* UProjectileManagerSubsystem::SpawnHomingProjectile(const FTransform& ProjectileTransform, const float ProjectileSpeed,
+	const TSubclassOf<AHomingProjectile>& ProjectileClass, AActor* TargetActor, USoundWave* LaunchSound, USoundWave* OnHitSound) const
 {
 	if (!ProjectileClass)
 	{
@@ -16,15 +17,21 @@ AHomingProjectile* UProjectileManagerSubsystem::SpawnHomingProjectile(const FTra
 	
 	AHomingProjectile* Projectile = GetWorld()->SpawnActorDeferred<AHomingProjectile>(ProjectileClass, ProjectileTransform);
 
-	const TWeakObjectPtr<AActor> ActorPointer = TargetActor;
+	const TWeakObjectPtr ActorPointer = TargetActor;
 	if (!ActorPointer.IsValid())
 	{
 		UE_LOG(LogTemp, Error, TEXT("UProjectileManagerSubsystem::SpawnHomingProjectile - TargetActor is invalid"));
 		return nullptr;
 	}
 	
-	Projectile->InitHomingProjectile(ProjectileSpeed, ActorPointer);
+	Projectile->InitHomingProjectile(ProjectileSpeed, ActorPointer, OnHitSound);
 	UGameplayStatics::FinishSpawningActor(Projectile, ProjectileTransform);
 
+	if (LaunchSound)
+	{
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), LaunchSound, Projectile->GetActorLocation());
+	}
+	
 	return Projectile;
 }
+

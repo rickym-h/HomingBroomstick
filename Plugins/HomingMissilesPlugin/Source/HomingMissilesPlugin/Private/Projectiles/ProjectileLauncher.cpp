@@ -52,7 +52,9 @@ void AProjectileLauncher::LaunchProjectile(AActor* Target)
 		FTransform(FRotator::ZeroRotator, ProjectileLaunchPoint->GetComponentLocation(), FVector(1)),
 		1200.f,
 		ProjectileClass,
-		Target
+		Target,
+		LaunchSoundEffect,
+		OnHitSoundEffect
 		);
 }
 

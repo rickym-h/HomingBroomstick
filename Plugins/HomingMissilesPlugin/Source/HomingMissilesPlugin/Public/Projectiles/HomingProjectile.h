@@ -23,7 +23,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	void InitHomingProjectile(const float InProjectileSpeed, const TWeakObjectPtr<AActor> InTargetActor);
+	void InitHomingProjectile(const float InProjectileSpeed, const TWeakObjectPtr<AActor> InTargetActor, USoundWave* OnHitSound);
 
 
 protected:
@@ -45,6 +45,8 @@ protected:
 	float DamageRadius;
 
 	bool bIsGliding = false;
+	UPROPERTY()
+	USoundWave* OnHitSound;
 
 	UFUNCTION()
 	void OnHitTarget(AActor* SelfActor, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit );

@@ -22,5 +22,7 @@ public:
 		const FTransform& ProjectileTransform,
 		const float ProjectileSpeed,
 		const TSubclassOf<AHomingProjectile>& ProjectileClass,
-		AActor* TargetActor) const;
+		AActor* TargetActor,
+		USoundWave* LaunchSound,
+		USoundWave* OnHitSound) const;
 };
